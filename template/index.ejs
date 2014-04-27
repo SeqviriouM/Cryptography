@@ -57,10 +57,26 @@
         <div class="col-xs-6" style="background-color: white; padding: 25px;">
 
           <form class="form-horizontal" role="form" method="post" action="/action">
-            <label> Введите предложения для кодирования:</label>
+            <label>Введите предложения для кодирования:</label>
             <div class="form-group">
               <input type="text" name="sentence" id="sentence" size="30">
             </div>
+            <label>Выберите необходимые действия:</label>
+            <div class="form-group">
+              <div class="radio">
+                <label>
+                  <input type="radio" name="actions" id="encryption" value="encryption">
+                    Шифрование
+                </label>
+              </div>
+              <div class="radio">
+                <label>
+                  <input type="radio" name="actions" id="decryption" value="decryption">
+                      Расшифрование
+                </label>
+              </div>
+            </div>
+            
             <label>Выберите метод</label>
             <div class="form-group">
               <div class="radio">

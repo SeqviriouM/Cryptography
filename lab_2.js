@@ -33,6 +33,7 @@ app.post('/action', function(req, res) {
 	var value= req.body['sentence']; // строка для шифрования
 	var keyword_1 = req.body['keyword0'] || false; // ключево слово 1
 	var keyword_2 = req.body['keyword1'] || false; // ключевое слово 2
+	var action = req.body['actions'];
 	var dop_str="";	// содержит необходимое кол-во звездочек, которые надо добавить к предложению, чтобы его длина стала кратна 5
 	var result="";
 
@@ -48,13 +49,26 @@ app.post('/action', function(req, res) {
 			break;
 
 		case "single":
-			result = singlePermulation(value, keyword_1);
-			console.log("Результат: " + result);
+			if (action === "encryption") {
+				result = singlePermulation(value, keyword_1);
+				console.log("Результат: " + result);
+			} else if (action === "decryption") {
+				result = desinglePermulation(value, keyword_1);
+				console.log("Результат: " + result);
+			} else {
+				console.log("Вы забыли выбрать что надо сделать)");
+			}
 			break;
-
 		case "twice":
-			result = twicePermulation(value, keyword_1, keyword_2);
-			console.log("Результат: " + result);
+		if (action === "encryption") {
+				result = twicePermulation(value, keyword_1, keyword_2);
+				console.log("Результат: " + result);
+			} else if (action === "decryption") {
+				result = detwicePermulation(value, keyword_1, keyword_2);
+				console.log("Результат: " + result);
+			} else {
+				console.log("Вы забыли выбрать что надо сделать)");
+			}
 			break;
 	}
 
@@ -132,7 +146,6 @@ function twicePermulation(value, keyword1, keyword2) {
 	var help_matr=[];
 	var k = 0;
 	var n = 0;
-	var help_str="";
 
 	if (keyword1) {
 		help_mas.push(keyword1[0]);
@@ -211,11 +224,143 @@ function twicePermulation(value, keyword1, keyword2) {
 	console.log(help_matr);
 	console.log("\n");
 
+
+
 	for (var i=0; i< 5; i++) {
-		for (var j=0; j<help_matr.length ;j++)
+		for (var j= (keyword2) ? 1 : 0; j<help_matr.length ;j++)
 			result += help_matr[j][i];
 	}  
 
 	return result;
 	console.log(result);
+}
+
+// Магические квадраты
+function magicSquare(value) {
+	
+}
+
+/* 
+
+Функции расшифровки
+
+*/
+
+// Одиночная перестановка
+function desinglePermulation(value, keyword) {
+	var result = "";
+	var matr = [];
+	var help_mas=[];
+	var help_matr=[];
+	var keyword_mas = [];
+	var k = 0;
+	var n = 0;
+
+	// Проверяем ввод ключевого слова
+	if (!keyword) {
+		console.log("Ошибка. Вы не ввели ключевое слово.");
+		return
+	}
+
+	// Создаем массив из символов ключевого слова и сортируем его
+	keyword_mas = keyword.split("");
+	keyword_mas.sort();
+
+	// Записываем слово по столбцам
+	for (var i=0; i<value.length/5; i++) {
+		help_mas = [];
+		k = i;
+		while (value[k]) {
+			help_mas.push(value[k]);
+			k+=value.length/5;
+		}
+		matr[keyword_mas[i]] = help_mas;
+	}	
+
+	console.log("Искомая матрица: \n");
+	console.log(matr);
+	console.log("\n");
+
+	// Определение искомого слова по последовательности букв в keyword
+	for (var i = 0; i < keyword_mas.length; i++) {
+		for (var j = 0; j < 5; j++) {
+			result += matr[keyword[i]][j];
+		}
+	}  
+
+	return result;
+}
+
+// Двойная перестановка
+function detwicePermulation(value, keyword1, keyword2) {
+	var result = "";
+	var matr = [];
+	var help_mas=[];
+	var help_matr=[];
+	var help_matr_2 = [];
+	var k = 0;
+	var n = 0;
+	var keyword_mas=[];
+
+	if (!keyword1 || !keyword2) {
+		console.log("Ошибка, Вы забыли ввести ключевое(ые) слово(а)");
+		return
+	}
+
+	keyword_mas = keyword1.split("");
+	keyword_mas.sort();
+
+	// Записываем слово по столбцам
+	for (var i=0; i<value.length/5; i++) {
+		help_mas = [];
+		k = i;
+		while (value[k]) {
+			help_mas.push(value[k]);
+			k+=value.length/5;
+		}
+		matr[keyword_mas[i]] = help_mas;
+	}	
+
+	console.log("Искомая матрица: \n");
+	console.log(matr);
+	console.log("\n");
+
+
+
+	// Определение искомого слова	
+	for (var i = 0; i < keyword_mas.length; i++) {
+		help_matr.push(matr[keyword1[i]].slice());
+	}  
+
+	//Исходное расположение строк
+	console.log("Матрица с исходным расположение строк: \n");
+	console.log(help_matr);
+	console.log("\n");
+
+	// Транспонируем матрицу, чтобы провести перестановку строк вместо столбцов
+	var newArray = help_matr[0].map(function(col, i) { 
+  	return help_matr.map(function(row) { 
+    	return row[i] 
+  	})
+	});
+
+	keyword_mas = [];
+	keyword_mas = keyword2.split("");
+	keyword_mas.sort();
+
+	// Заполняем новый массив с новым ключевым словом
+	for (var i=0; i<keyword_mas.length; i++) {
+		help_matr_2[keyword_mas[i]] = newArray[i].slice();
+	}
+	console.log("Матрица с ключевым словом по столбцам: \n");
+	console.log(help_matr_2);
+	console.log("\n");
+
+	// Определение искомого слова по последовательности букв в keyword2
+	for (var i=0; i<keyword1.length; i++) {
+		for (var j=0; j<5 ;j++)
+			result += help_matr_2[keyword2[j]][i];
+	}  
+
+	return result;
 }
