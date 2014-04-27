@@ -45,7 +45,16 @@ app.post('/action', function(req, res) {
 
 	switch(method) {
 		
-		case "magic": 
+		case "magic":
+		 if (action === "encryption") {
+				result = magicSquare(value);
+				console.log("Результат: " + result);
+			} else if (action === "decryption") {
+				result = demagicSquare(value);
+				console.log("Результат: " + result);
+			} else {
+				console.log("Вы забыли выбрать что надо сделать)");
+			}
 			break;
 
 		case "single":
@@ -73,7 +82,7 @@ app.post('/action', function(req, res) {
 	}
 
 	res.render("result", {
-		method: method,
+		result: result,
 		value: value
 	});	
 
@@ -235,9 +244,25 @@ function twicePermulation(value, keyword1, keyword2) {
 	console.log(result);
 }
 
-// Магические квадраты
+// Магический квадрат
 function magicSquare(value) {
-	
+	var square = [16, 3, 2, 13, 5, 10, 11, 8, 9, 6, 7, 12, 4, 15, 14, 1];
+	var result = "";
+
+	if (value.length > 16) {
+		console.log("Длина шифруемого предложения превысила 16 символов");
+		return;
+	}
+
+	while (value.length !== 16) {
+		value += "*";
+	}
+
+	for (var i=0; i<16; i++) {
+		result += value[square[i]-1];
+	}
+
+	return result;
 }
 
 /* 
@@ -361,6 +386,18 @@ function detwicePermulation(value, keyword1, keyword2) {
 		for (var j=0; j<5 ;j++)
 			result += help_matr_2[keyword2[j]][i];
 	}  
+
+	return result;
+}
+
+// Магический квадрат
+function demagicSquare(value) {
+	var square = [16, 3, 2, 13, 5, 10, 11, 8, 9, 6, 7, 12, 4, 15, 14, 1];
+	var result = "";
+
+	for (var i=0; i<16; i++) {
+		result += value[square[i]-1];
+	}
 
 	return result;
 }

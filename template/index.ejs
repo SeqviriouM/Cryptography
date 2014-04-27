@@ -133,7 +133,8 @@
       c=0;
 
       for (var  i=0; i<count; i++) {
-        $('#add_fields').append('<label>Ключевое слово ' + (i+1) + ':</label><br><div  id="info'+ i + '"><input type="text" id="keyword' + i + '" name="keyword' + c + '" placeholder="Длина ключевого слова ' + Math.ceil($('#sentence').val().length/5) + '" size="30" "></div><br>');
+        var length = (i === 1) ? 5 : Math.ceil($('#sentence').val().length/5);
+        $('#add_fields').append('<label>Ключевое слово ' + (i+1) + ':</label><br><div  id="info'+ i + '"><input type="text" id="keyword' + i + '" name="keyword' + c + '" placeholder="Длина ключевого слова ' + length + '" size="30" "></div><br>');
       c++;
     }
       
